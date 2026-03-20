@@ -30,6 +30,39 @@
     <div id="totalProdutos">
         Total de produtos: 0
     </div>
+
+    <script>
+        function listarProdutos() {
+            fetch('http://localhost:8080/produtos')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro na rede: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const tableBody = document.getElementById('produtosTable').getElementsByTagName('tbody')[0];
+                    let totalProdutos = 0;
+                    data.forEach(produto => {
+                        const row = tableBody.insertRow();
+                        const cellId = row.insertCell(0);
+                        const cellNome = row.insertCell(1);
+                        const cellPreco = row.insertCell(2);
+
+                        cellId.textContent = produto.id;
+                        cellNome.textContent = produto.nome;
+                        cellPreco.textContent = produto.preco;
+                        totalProdutos++;
+                    });
+                    document.getElementById('totalProdutos').textContent = 'Total de Produtos: ' + totalProdutos;
+                })
+            .catch(error => {
+                console.error('Erro ao buscar produtos: ', error);
+                document.getElementById('erroMensagem').style.display = 'block';
+            });
+        }
+
+    </script>
 </body>
 
 </html>
